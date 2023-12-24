@@ -6,8 +6,10 @@ import time
 import logger
 
 logger = logger.Logger()
-logger.log2console()
+#logger.log2console()
 logger.log2file()
+
+hotkey = "F8"
 
 
 def write_to_file():
@@ -20,11 +22,11 @@ def write_to_file():
 
 
 def start_listening():
-    keyboard.add_hotkey("ctrl+t", write_to_file)
+    keyboard.add_hotkey(hotkey, write_to_file)
 
 
 def stop_listening():
-    keyboard.clear_hotkey("ctrl+t")
+    keyboard.clear_hotkey(hotkey)
 
 
 def btn_click():
