@@ -3,19 +3,19 @@ from tkinter import ttk
 import keyboard
 import pyperclip
 import time
-import logging
+import logger
 
-logging.basicConfig(filename='output.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s',
-                    encoding="utf-8")
+logger = logger.Logger()
+logger.log2console()
+logger.log2file()
 
 
 def write_to_file():
     keyboard.send("ctrl+c")
-    time.sleep(0.1)
+    time.sleep(0.01)  # 代码执行太快会粘贴到上一次复制的内容
     content = pyperclip.paste()
-    # print(content)
-    logging.debug(content)
-    with open("output.txt", "a", encoding="utf-7") as file:
+    logger.debug(content)
+    with open("output.txt", "a", encoding="utf-8") as file:
         file.write(content + "\n")
 
 
@@ -30,11 +30,11 @@ def stop_listening():
 def btn_click():
     if btn["text"] == "start":
         btn["text"] = "stop"
-        logging.info("start")
+        logger.info("start")
         start_listening()
     else:
         btn["text"] = "start"
-        logging.info("stop")
+        logger.info("stop")
         stop_listening()
 
 
