@@ -2,16 +2,25 @@ import tkinter as tk
 from tkinter import ttk
 import keyboard
 import pyperclip
+import time
+import logging
+
+logging.basicConfig(filename='output.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s',
+                    encoding="utf-8")
 
 
-def write_to_file(content):
-    print(content)
-    with open("output.txt", "a") as file:
+def write_to_file():
+    keyboard.send("ctrl+c")
+    time.sleep(0.1)
+    content = pyperclip.paste()
+    # print(content)
+    logging.debug(content)
+    with open("output.txt", "a", encoding="utf-7") as file:
         file.write(content + "\n")
 
 
 def start_listening():
-    keyboard.add_hotkey("ctrl+t", lambda: write_to_file(pyperclip.paste()))
+    keyboard.add_hotkey("ctrl+t", write_to_file)
 
 
 def stop_listening():
@@ -21,11 +30,11 @@ def stop_listening():
 def btn_click():
     if btn["text"] == "start":
         btn["text"] = "stop"
-        print("start")
+        logging.info("start")
         start_listening()
     else:
         btn["text"] = "start"
-        print("stop")
+        logging.info("stop")
         stop_listening()
 
 
@@ -37,4 +46,9 @@ root.title("Tap2Word")
 btn = ttk.Button(root, text="start", command=btn_click)
 btn.pack()
 
-root.mainloop()
+try:
+    root.mainloop()
+except KeyboardInterrupt:
+    # 用户点击关闭按钮，执行退出操作
+    stop_listening()
+    root.destroy()
